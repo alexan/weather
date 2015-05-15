@@ -1,0 +1,172 @@
+html,
+body {
+   height: 100%;
+   padding: 0;
+   margin: 0;
+}
+
+i {
+   color: white
+}
+/* label underline focus color */
+
+.input-field input[type=text] {
+   border-bottom: 1px solid #fff;
+   box-shadow: 0 1px 0 0 #fff;
+}
+
+.input-field input[type=text]:focus {
+   border-bottom: 1px solid #2bbbad;
+   box-shadow: 0 1px 0 0 #2bbbad;
+   color: #fff;
+}
+/* icon prefix focus color */
+
+.input-field .prefix.active {
+   color: #fff;
+}
+
+.input-field .prefix {
+   color: #fff;
+   font-size: 1.5em;
+   margin-top: -0.2rem;
+}
+
+header {
+   position: absolute;
+   background-color: rgb(0, 142, 223);
+   height: 7rem;
+   z-index: 1;
+   top: 1rem;
+   left: 1rem;
+   right: 1rem
+}
+
+.location-container {
+   padding-right: 1rem;
+   width: 100%;
+}
+
+.input-field .prefix {
+   height: 2rem;
+   margin-top: 0;
+}
+
+.input-field .prefix ~.set-location {
+   width: 60%;
+   max-width: 30rem;
+   color: #fff;
+   height: 2rem;
+}
+
+.detect-location {
+   position: absolute;
+   right: 1rem;
+   margin-bottom: 0;
+   bottom: calc(55.5px / -2);
+   background-color: rgb(215, 0, 108);
+}
+
+.detect-location:hover {
+   background-color: rgb(215, 0, 108);
+}
+
+.detect-location i {}
+
+.map {
+   height: 100%;
+}
+
+.box {
+   border-radius: 2px;
+}
+
+.weather-image {
+   border-radius: 40px;
+   margin: 5px;
+   flex-shrink: 0;
+}
+
+.weather-text1 {
+   flex-basis: 5em;
+   display: flex;
+   align-items: flex-end;
+   justify-content: flex-end;
+   text-align: center;
+}
+
+.weather-text2 {
+   flex-basis: 5em;
+   text-align: center;
+}
+
+.weather {
+   display: flex;
+   align-items: center;
+   justify-content: space-around;
+   align-content: center;
+   flex-wrap: wrap;
+   flex-flow: column;
+   flex-grow: 1;
+}
+
+.weather-container {
+   z-index: 1;
+   bottom: 4rem;
+   width: 25%;
+   left: 2rem;
+   top: 4rem;
+   position: absolute;
+   color: #fff;
+   background-color: white;
+   color: black;
+   font-size: 1em;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+@media screen and (max-width: 500px) {
+   .location-container {
+      padding-right: 2rem;
+      width: 100%;
+   }
+   .input-field {
+      padding-top: 1rem;
+   }
+   .input-field .prefix ~.set-location {
+      width: calc(100% - 3rem);
+   }
+   .controll {
+      bottom: 1em;
+      left: 1em;
+      right: 1em;
+      position: absolute;
+   }
+   header {
+      top: 0;
+      right: 0;
+      left: 0;
+      position: relative;
+      overflow: visible;
+      z-index: 2;
+   }
+   .weather-container {
+      z-index: 1;
+      position: relative;
+      width: 100%;
+      bottom: 0;
+      left: 0;
+      top: 0;
+      background-color: white;
+      height: 7rem;
+      flex-wrap: nowrap;
+      flex-flow: row;
+   }
+   .weather {
+      flex-flow: row;
+   }
+   .hide {
+      display: none;
+   }
+}
