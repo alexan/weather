@@ -191,4 +191,7 @@ header {
    .hide {
       display: none;
    }
+  .forecast {
+    display: none;
+  }
 }
