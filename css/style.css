@@ -134,6 +134,7 @@ header {
 
 .weather-container {
    z-index: 1;
+   min-width: 25%;
    bottom: 4rem;
    left: 2rem;
    top: 4rem;
