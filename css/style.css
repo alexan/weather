@@ -5,6 +5,7 @@ body {
    margin: 0;
 }
 
+
 i {
    color: white
 }
@@ -110,10 +111,30 @@ header {
    flex-grow: 1;
 }
 
+.forecast {
+   display:flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+}
+
+.forecast-item {
+  margin: 0 1rem;
+  display:flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+
 .weather-container {
    z-index: 1;
    bottom: 4rem;
-   width: 25%;
    left: 2rem;
    top: 4rem;
    position: absolute;
@@ -124,6 +145,7 @@ header {
    display: flex;
    align-items: center;
    justify-content: center;
+   flex-direction: column;
 }
 
 @media screen and (max-width: 500px) {
@@ -161,7 +183,6 @@ header {
       background-color: white;
       height: 7rem;
       flex-wrap: nowrap;
-      flex-flow: row;
    }
    .weather {
       flex-flow: row;

@@ -211,9 +211,39 @@ mom.createModule('weather')
             <span class="weather-text1">' + weather.description + '</span>\
             <img class="weather-image" src="' + weather.icon + '">\
             <span class="weather-text2">' + weather.temp + ' °C</span>\
-         </div>';
+         </div>\
+         <div class="forecast">' + renderForecast(weather.forecast) + '</div>';
 
          $domElement.html(html);
+      }
+  
+      function renderForecast(forecast) {
+          var html = '';
+        
+          forecast.forEach(function(item) {
+             html = html + '<span class="forecast-item">\
+                <span class="forecast-item-date">' + renderDate(item.date) + '</span>\
+                <span class="forecast-item-temp">' + item.maxTemp + '° / ' + item.minTemp + '°</span>\
+            </span>';
+          });
+        
+          return html;
+      }
+  
+  
+      function renderDate(date) {
+        var day = date.getDay();
+        
+        switch (day) {
+          case 0: return 'Su.';
+          case 1: return 'Mo.';
+          case 2: return 'Tu.';
+          case 3: return 'We.';
+          case 4: return 'Th.';
+          case 5: return 'Fr.';
+          case 6: return 'Sa.';
+        }
+        
       }
 
       function loading() {
@@ -323,20 +353,35 @@ mom.createPart('wwo-mapper')
    .creator(function () {
 
       function map(data) {
-         var weather = data.data,
-            current_condition = weather.current_condition[0],
-            temp = current_condition.temp_C,
-            description = current_condition.weatherDesc[0].value,
-            icon = current_condition.weatherIconUrl[0].value;
-
+         var weather = data.data;
+         var current_condition = weather.current_condition[0];
+         var temp = current_condition.temp_C;
+         var description = current_condition.weatherDesc[0].value;
+         var icon = current_condition.weatherIconUrl[0].value;
+         var forecast = mapForecast(weather.weather);
 
          return {
             supplier: 'World Weather Online',
             temp: temp,
             description: description,
-            icon: icon
+            icon: icon,
+            forecast: forecast
          };
+      }
+  
+      function mapForecast(weather) {
+          var forecast = weather.map(mapCondition);
+          return forecast;
+      }
+  
+      function mapCondition(condition) {
 
+         return {
+            date: new Date(condition.date),
+            maxTemp: condition.maxtempC,
+            minTemp: condition.mintempC
+         };
+        
       }
 
       return {
