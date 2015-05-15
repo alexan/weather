@@ -121,7 +121,7 @@ header {
 }
 
 .forecast-item {
-  margin: 0 1rem;
+  margin: 0 0.75rem;
   display:flex;
   flex-direction: column;
   flex-wrap: wrap;
