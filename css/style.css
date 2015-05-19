@@ -115,10 +115,7 @@ header {
 }
 
 .forecast-graph {
-   display: flex;
-   align-items: center;
-   justify-content: space-around;
-   align-content: center;
+   display: none;
    flex-wrap: wrap;
    flex-flow: column;
    flex-grow: 1;
