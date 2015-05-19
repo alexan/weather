@@ -214,12 +214,12 @@ mom.createModule('weather')
       function renderForecast(forecast) {
          var html = '';
 
-         forecast.forEach(function (item) {
-            html = html + '<span class="forecast-item">\
+         html = forecast.reduce(function (html, item) {
+            return html + '<span class="forecast-item">\
                 <span class="forecast-item-date">' + renderDate(item.date) + '</span>\
                 <span class="forecast-item-temp">' + item.maxTemp + '° / ' + item.minTemp + '°</span>\
             </span>';
-         });
+         }, html);
 
          return html;
       }
@@ -338,10 +338,6 @@ mom.createPart('wwo-loader')
          req.error(function () {
             alert('World Weather Online api not reachable. Wait for a while');
          });
-      }
-
-      function onLocationChanged(event) {
-         loadWeather(event.lat, event.lng);
       }
 
       return {
