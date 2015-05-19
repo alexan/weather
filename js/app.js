@@ -15,13 +15,8 @@ function weatherChangedEvent(weather) {
 
 mom.createModule('set-location')
    .dependencies(['location-translator', 'event-bus'])
-   .settings({
-      city: 'New York'
-   })
-   .creator(function (domElement, settings, translator, eventBus) {
+   .creator(function (domElement, translator, eventBus) {
       var $location = $(domElement);
-
-      setLocation(settings.city);
 
       $location.on('change', function () {
          var location = $location.val();
@@ -30,6 +25,10 @@ mom.createModule('set-location')
             publishLocation(location);
          }
       });
+
+      return {
+         onLocationChanged: onLocationChanged
+      };
 
       function setLocation(name) {
          $location.val(name);
@@ -47,14 +46,9 @@ mom.createModule('set-location')
          });
       }
 
-      function postConstruct() {
-         publishLocation(settings.city);
-      }
 
-      return {
-         onLocationChanged: onLocationChanged,
-         postConstruct: postConstruct
-      };
+
+
    });
 
 mom.createModule('map')
@@ -71,7 +65,7 @@ mom.createModule('map')
             zoomControl: false,
             zoom: 8,
             streetViewControl: false
-      }, settings.mapOptions),
+         }, settings.mapOptions),
          map = new google.maps.Map(domElement,
             mapOptions),
          marker,
@@ -216,34 +210,41 @@ mom.createModule('weather')
 
          $domElement.html(html);
       }
-  
+
       function renderForecast(forecast) {
-          var html = '';
-        
-          forecast.forEach(function(item) {
-             html = html + '<span class="forecast-item">\
+         var html = '';
+
+         forecast.forEach(function (item) {
+            html = html + '<span class="forecast-item">\
                 <span class="forecast-item-date">' + renderDate(item.date) + '</span>\
                 <span class="forecast-item-temp">' + item.maxTemp + '° / ' + item.minTemp + '°</span>\
             </span>';
-          });
-        
-          return html;
+         });
+
+         return html;
       }
-  
-  
+
+
       function renderDate(date) {
-        var day = date.getDay();
-        
-        switch (day) {
-          case 0: return 'Su.';
-          case 1: return 'Mo.';
-          case 2: return 'Tu.';
-          case 3: return 'We.';
-          case 4: return 'Th.';
-          case 5: return 'Fr.';
-          case 6: return 'Sa.';
-        }
-        
+         var day = date.getDay();
+
+         switch (day) {
+         case 0:
+            return 'Su.';
+         case 1:
+            return 'Mo.';
+         case 2:
+            return 'Tu.';
+         case 3:
+            return 'We.';
+         case 4:
+            return 'Th.';
+         case 5:
+            return 'Fr.';
+         case 6:
+            return 'Sa.';
+         }
+
       }
 
       function loading() {
@@ -368,12 +369,12 @@ mom.createPart('wwo-mapper')
             forecast: forecast
          };
       }
-  
+
       function mapForecast(weather) {
-          var forecast = weather.map(mapCondition);
-          return forecast;
+         var forecast = weather.map(mapCondition);
+         return forecast;
       }
-  
+
       function mapCondition(condition) {
 
          return {
@@ -381,7 +382,7 @@ mom.createPart('wwo-mapper')
             maxTemp: condition.maxtempC,
             minTemp: condition.mintempC
          };
-        
+
       }
 
       return {
@@ -389,9 +390,41 @@ mom.createPart('wwo-mapper')
       };
    });
 
+mom.createPart('location-persister')
+   .scope(mom.scope.eagerSingleton)
+   .dependencies(['event-bus'])
+   .settings({
+      lat: 40.748817,
+      lng: -73.985428
+   })
+   .creator(function (settings, eventBus) {
+      var LNG_KEY = 'WEATHER_LNG';
+      var LAT_KEY = 'WEATHER_LAT';
+
+      eventBus.add({
+         onLocationChanged: onLocationChanged
+      });
+
+      return {
+         postConstruct: postConstruct
+      };
+
+      function postConstruct() {
+         var lat = JSON.parse(localStorage.getItem(LAT_KEY)) || settings.lat;
+         var lng = JSON.parse(localStorage.getItem(LNG_KEY)) || settings.lng;
+
+         eventBus.publish(locationChangedEvent(lat, lng));
+      }
+
+      function onLocationChanged(event) {
+         localStorage.setItem(LNG_KEY, JSON.stringify(event.lng));
+         localStorage.setItem(LAT_KEY, JSON.stringify(event.lat));
+      }
+
+   });
 
 mom.createPart('nearest-location')
-   .scope(mom.scope.eagerSingleton)
+   .scope(mom.scope.lazySingleton)
    .creator(function () {
 
       function getLocation(callback) {
