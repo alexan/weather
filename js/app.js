@@ -212,14 +212,12 @@ mom.createModule('weather')
       }
 
       function renderForecast(forecast) {
-         var html = '';
-
-         html = forecast.reduce(function (html, item) {
+         var html = forecast.reduce(function (html, item) {
             return html + '<span class="forecast-item">\
                 <span class="forecast-item-date">' + renderDate(item.date) + '</span>\
                 <span class="forecast-item-temp">' + item.maxTemp + '° / ' + item.minTemp + '°</span>\
             </span>';
-         }, html);
+         }, '');
 
          return html;
       }
