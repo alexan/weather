@@ -201,19 +201,65 @@ mom.createModule('weather')
 
       function render(weather) {
          var html = '\
-         <div class="weather">\
+         <div class="weather js-weather">\
             <span class="weather-text1">' + weather.description + '</span>\
             <img class="weather-image" src="' + weather.icon + '">\
             <span class="weather-text2">' + weather.temp + ' °C</span>\
          </div>\
+         <div class="forecast-graph js-forecast-graph">\
+            <div id="temp"></div>\
+            <div id="rain"></div>\
+         </div>\
          <div class="forecast">' + renderForecast(weather.forecast) + '</div>';
+         var $forcastItems;
+         var $weather;
+         var $graph;
 
          $domElement.html(html);
+         $forcastItems = $domElement.find('.js-showForecast');
+         $weather = $domElement.find('.js-weather');
+         $graph = $domElement.find('.js-forecast-graph');
+         $forcastItems.click(clickForecast);
+
+         function clickForecast() {
+            var $clicked = $(this);
+            var i = $clicked.data('i');
+
+            if ($clicked.hasClass('forecast-item-active')) {
+               $weather.show();
+               $graph.hide();
+               $clicked.removeClass('forecast-item-active');
+            } else {
+               $forcastItems.removeClass('forecast-item-active');
+               $clicked.addClass('forecast-item-active');
+               $weather.hide();
+               $graph.show();
+
+
+               MG.data_graphic({
+                  title: 'Temp',
+                  data: weather.forecast[i].hourly,
+                  target: '#temp',
+                  x_accessor: 'hour',
+                  y_accessor: 'temp',
+                  linked: true
+               });
+               MG.data_graphic({
+                  title: 'Chance of rain',
+                  data: weather.forecast[i].hourly,
+                  target: '#rain',
+                  x_accessor: 'hour',
+                  y_accessor: 'chance of rain',
+                  linked: true
+               });
+            }
+         }
       }
 
       function renderForecast(forecast) {
+         var i = 0;
          var html = forecast.reduce(function (html, item) {
-            return html + '<span class="forecast-item">\
+            return html + '<span class="forecast-item js-showForecast" data-i="' + i++ +'">\
                 <span class="forecast-item-date">' + renderDate(item.date) + '</span>\
                 <span class="forecast-item-temp">' + item.maxTemp + '° / ' + item.minTemp + '°</span>\
             </span>';
@@ -244,6 +290,8 @@ mom.createModule('weather')
          }
 
       }
+
+
 
       function loading() {
          var html = '\
@@ -370,14 +418,29 @@ mom.createPart('wwo-mapper')
       }
 
       function mapCondition(condition) {
+         var date = new Date(condition.date);
+
 
          return {
-            date: new Date(condition.date),
+            date: date,
             maxTemp: condition.maxtempC,
-            minTemp: condition.mintempC
+            minTemp: condition.mintempC,
+            hourly: condition.hourly.map(mapHourly)
          };
 
+         function mapHourly(hourly) {
+            var hour = +hourly.time.substring(0, hourly.time.length - 2);
+
+            return {
+               temp: +hourly.tempC,
+               'chance of rain': +hourly.chanceofrain,
+               hour: hour
+            };
+         }
+
       }
+
+
 
       return {
          map: map
